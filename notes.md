@@ -81,13 +81,26 @@ def hello_world():
 
 <details><summary>Strips und Fans</summary>
 
-- **Strips und Fans** sind Möglichkeiten, Dreiecke **effizienter** zu speichern und zu rendern. Nur noch **n+2** Vertices/Indices statt **3n**
-- **Strips** = 2 Dreiecke teilen sich eine Seite, um eine lange Kette von Dreiecken zu bilden
-- **Fans** = ein zentraler Vertex, von dem aus Dreiecke ausgehen
+**Strips und Fans** sind Möglichkeiten, Dreiecke **effizienter** zu speichern und zu rendern. Nur noch **n+2** Vertices/Indices statt **3n**
 
-<img src="./images/strip.jpeg" width="800" />
+- **Fans** = ein zentraler Vertex, von dem aus Dreiecke ausgehen (gut für Kreise oder andere symmetrische Formen)
+```OpenGL: GL_TRIANGLE_FAN
+p0 = hub (центр)
+Dreieck(p0, p1, p2)
+Dreieck(p0, p2, p3)
+Dreieck(p0, p3, p4)
+```
+
+- **Strips** = 2 Dreiecke teilen sich eine Seite, um eine lange Kette von Dreiecken zu bilden (gut für Boden, Wände, etc.)
+```OpenGL: GL_TRIANGLE_FAN
+Dreieck(p0, p1, p2)
+Dreieck(p2, p1, p3)  ← два предыдущих + новая
+Dreieck(p2, p3, p4)
+```
 
 <img src="./images/fan.jpeg" width="800" />
+
+<img src="./images/strip.jpeg" width="800" />
 </details>
 
 ## 2 VL: Primitives
@@ -178,11 +191,12 @@ Eigenschaften von affinen Abbildungen:
 	- **Pitch** = x-Achse
 	- **Yaw/Head** = y-Achse
 - `R = Rroll · Rpitch · Ryaw`. Die Reihenfolge ist umgekehrt zu der, in der die Rotationen angewendet werden (Yaw -> Pitch -> Roll)
+	- [Крен, Тангаж, Рыскание](https://rcsearch.ru/wiki/%D0%9A%D1%80%D0%B5%D0%BD,_%D0%A2%D0%B0%D0%BD%D0%B3%D0%B0%D0%B6,_%D0%A0%D1%8B%D1%81%D0%BA%D0%B0%D0%BD%D0%B8%D0%B5)
 </details>
 
 <details><summary>Gimbal Lock</summary>
 
-- GL = wenn zwei Rotationsachsen in einer Linie liegen, **verliert man eine Rotationsfreiheit**
+        - GL = wenn zwei Rotationsachsen in einer Linie liegen, **verliert man eine Rotationsfreiheit**
 - z.B. wenn Pitch +-90° ist, dann liegen Roll und Yaw auf der selben Achse, man kann nicht mehr zwischen ihnen unterscheiden
 - Problem bei der Verwendung von Euler-Winkeln für die Rotation (3D-Rotation)
 - Lösung: **Quaternionen** (4D-Rotation)
