@@ -322,14 +322,15 @@ Wichtig: nicht kommutativ bei Multiplikation (`q₁q₂ != q₂q₁`)
 
 <details><summary>Translation und homogene Koordinaten</summary>
 
-- Translation = Verschiebung eines Objekts um einen Vektor `t = (tx, ty, tz)`
-- kein 3x3 Matrix; bei Drehung/Rotation oder Skalierung 3x3
-- In OpenGL Translation представляется с помощью матриц. Они же **homogene Koordinaten**, так как мы добавляем четвертую координату (`(x, y, z)  →  (x, y, z, 1)`), чтобы включить трансляцию в матрицы и получается 4x4-Matrix.
-- Vorteile von homogenen Koordinaten:
-  - Einheitliche Darstellung aller Transformationen - можно объединить все трансформации (Drehung/Rotation, Skalierung, Translation) в одну матрицу и применять ее к точкам в одном шаге
-  - Hintereinanderausführung durch Matrixmultiplikation - комбинирование через умножение матриц
+### Translation = Verschiebung eines Objekts um einen Vektor `t = (tx, ty, tz)`
 
-**Struktur der homogenen Koordinaten:**
+**Problem**: Translation **kann nicht** durch eine 3x3-Matrix dargestellt werden; bei Drehung/Rotation oder Skalierung kann  
+Warum ist das wichtig? Weil wir alle Transformationen (Drehung, Skalierung, Translation) in einer einzigen Matrix kombinieren wollen, um sie effizient auf Punkte anzuwenden. 
+
+**Решение: homogene Koordinaten**, а именно добавление четвертой координаты `(x, y, z)  →  (x, y, z, 1)`
+<br/>
+
+### Struktur der homogenen Koordinaten:  
 <img src="./images/hom_koor.jpeg" width="300" />
 
 - oben links: 3x3-Matrix für Rotation/Skalierung
@@ -341,6 +342,27 @@ Wichtig: nicht kommutativ bei Multiplikation (`q₁q₂ != q₂q₁`)
 3D NK → 4D:  (x,y,z)   →  [x,y,z,1]
 4D HK → 3D:  [x,y,z,1] →  (x,y,z)
 ```
+<br/>
+
+### Punkte vs Vektoren in HK:
+- Punkt: `w = 1`
+- Vektor: `w = 0`
+
+_Beispiel:_
+- Sei Punkte `A = (3, 5, 4)` und `B = (2, 7, 2)`
+- in HK: `A = [3, 5, 4, 1]` und `B = [2, 7, 2, 1]`
+- Vektor:  `v = A - B = [3-2, 5-7, 4-2, 1-1] = [1, -2, 2, 0]` (последний элемент всегда 0)
+
+**Выводы:**
+- Translation влияет только на точки `(w=1)`, не влияет на векторы `(w=0)`. Это логично, т.к. вектор это направление, а не конкретная позиция в пространстве.
 </details>
 
-Закончили на странице 52
+## 4 VL: ...
+
+<details><summary>Kanonische Sichtvolumen</summary>
+
+<img src="./images/ks.jpeg" width="400" />
+
+> Загрузить отредактированную версию VL-3
+
+</details>
