@@ -276,7 +276,7 @@ Wichtig: nicht kommutativ bei Multiplikation (`q₁q₂ != q₂q₁`)
 
 <img src="./images/mult_q.jpg" width="400" />
 
-**Conjugation, Inverse, Norm:**
+**Conjugation, Inverse, Norm:**  
 <img src="./images/q3.jpeg" width="400" />
 <img src="./images/q4.jpeg" width="400" />
 <img src="./images/q5.jpeg" width="400" />
@@ -301,7 +301,7 @@ Wichtig: nicht kommutativ bei Multiplikation (`q₁q₂ != q₂q₁`)
 4. p' = q · p · q⁻¹
 5. P' = xyz из p'
 
-**Примеры, которые пока непонятны:**
+**Примеры, которые пока непонятны:**  
 <img src="./images/q_b1.jpeg" width="400" />
 <img src="./images/q_b2.jpeg" width="400" />
 </details>
@@ -357,12 +357,700 @@ _Beispiel:_
 - Translation влияет только на точки `(w=1)`, не влияет на векторы `(w=0)`. Это логично, т.к. вектор это направление, а не конкретная позиция в пространстве.
 </details>
 
-## 4 VL: ...
+## 4 VL: Sichtvolumen & Projektionen
 
-<details><summary>Kanonische Sichtvolumen</summary>
+<details><summary>Homogene Koordinaten: Translation = Scherung in w</summary>
 
-<img src="./images/ks.jpeg" width="400" />
+<img src="./images/hom-scherung.jpeg" width="550" />
 
-> Загрузить отредактированную версию VL-3
+> **Translation = Scherung in `w`**: Verschiebt man `[x,y,1] → [x,y',1]`. Das erklärt, warum Translation durch die zusätzliche `w`-Dimension zu einer linearen Matrix wird.
+
+</details>
+
+<details><summary>Kanonisches Sichtvolumen & Bildschirmtransformation</summary>
+
+- Objekte liegen innerhalb `[-1,1]³`
+  
+<img src="./images/ks.jpeg" width="600" />
+
+**Bildschirmtransformation** = kanonische in Pixelkoordinaten umwandeln:
+
+$$
+\begin{bmatrix}x_{Pixel}\\y_{Pixel}\\1\end{bmatrix} = \underbrace{\begin{bmatrix}1&0&\frac{n_x-1}{2}\\0&1&\frac{n_y-1}{2}\\0&0&1\end{bmatrix}}_{Translation}\underbrace{\begin{bmatrix}\frac{n_x}{2}&0&0\\0&\frac{n_y}{2}&0\\0&0&1\end{bmatrix}}_{Skalierung}\begin{bmatrix}x_{Bildschirm}\\y_{Bildschirm}\\1\end{bmatrix}
+$$
+
+</details>
+
+<details><summary>Projektive Transformation & Orthographische Projektion</summary>
+
+- Objekte liegen normalerweise **nicht** innerhalb `[-1,1]³`
+- Die **projektive Transformation** bildet das (beliebige) Sichtvolumen auf das kanonische ab - bereitet die Projektion auf den Bildschirm vor
+- Einfachster Fall: **orthographische Projektion** eines achsenparallelen Quaders `[l,r]×[b,t]×[n,f]` auf den kanonischen Würfel
+- Ähnlich zur Bildschirmtransformation
+
+$$
+\begin{bmatrix}x_{kanonisch}\\y_{kanonisch}\\z_{kanonisch}\\1\end{bmatrix} = \underbrace{\begin{bmatrix}\frac{2}{r-l}&0&0&0\\0&\frac{2}{t-b}&0&0\\0&0&\frac{2}{n-f}&0\\0&0&0&1\end{bmatrix}}_{Skalierung}\underbrace{\begin{bmatrix}1&0&0&-\frac{l+r}{2}\\0&1&0&-\frac{b+t}{2}\\0&0&1&-\frac{n+f}{2}\\0&0&0&1\end{bmatrix}}_{Translation}\begin{bmatrix}x\\y\\z\\1\end{bmatrix}
+$$
+
+</details>
+
+<details><summary>Betrachterposition und -richtung (Kamerakoordinatensystem)</summary>
+
+<img src="./images/uvw.jpeg" width="600" />
+
+$$
+\begin{bmatrix}u&v&w&a\\0&0&0&1\end{bmatrix}^{-1} = \underbrace{\begin{bmatrix}u^t&0\\v^t&0\\w^t&0\\0&1\end{bmatrix}}_{Rotation}\underbrace{\begin{bmatrix}1&0&0&-a\\0&1&0&-a\\0&0&1&-a\\0&0&0&1\end{bmatrix}}_{Translation} = \begin{bmatrix}u^t&-a\cdot u\\v^t&-a\cdot v\\w^t&-a\cdot w\\0&1\end{bmatrix}
+$$
+
+</details>
+
+<details><summary>Hierarchie von Projektionen</summary>
+
+<img src="./images/projection_classification.png" width="600" />  
+
+<img src="./images/hier.png" width="550" />
+
+</details>
+
+<details><summary>Parallelprojektion allgemein</summary>
+
+- +: Projektionsstrahlen sind alle parallel → einfach zu berechnen und es gut für technische Zeichnungen; Parallelität/Verhältnisse bleiben erhalten
+- -: weniger natürlich als Perspektive (keine Verkürzung mit der Entfernung)
+
+</details>
+
+<details><summary>Rechtwinklige Projektionen (orthogonale Parallelprojektion)</summary>
+
+- Projektionsrichtung steht **senkrecht** auf der Projektionsebene
+
+**Beispiel**:
+
+<img src="./images/slide-65.png" width="600" />  
+<img src="./images/slide-66.png" width="600" />  
+<img src="./images/slide-67.png" width="600" />
+
+</details>
+
+<details><summary>Schiefwinklige Projektionen (Kavalier- und Kabinettprojektion)</summary>
+
+- **Projektionsrichtung steht NICHT senkrecht** zur Projektionsebene
+- Projektionsebene meist parallel zu 2 Koordinatenachsen (z.B. xy-Ebene)
+
+`g = (-cosα·cosβ,  -sinα·cosβ,  -sinβ)`
+
+- Matrix = **Scherung** in der xy-Ebene + Parallelprojektion entlang z:
+
+$$
+P = \begin{bmatrix}1&0&-\frac{\cos\alpha}{\tan\beta}&0\\0&1&-\frac{\sin\alpha}{\tan\beta}&0\\0&0&0&0\\0&0&0&1\end{bmatrix}
+$$
+
+<img src="./images/kavalier.jpeg" width="600" />
+
+1. **Kavalierprojektion**: `β = 45°` → Längen entlang der Projektionsrichtung bleiben **erhalten** (wie bei Isometrie) → Objekte wirken gestreckt/unnatürlich
+
+<img src="./images/kabinett.jpeg" width="600" />
+
+2. **Kabinettprojektion**: Verkürzung entlang der Projektionsrichtung um `0.5` → `β = arctan(2) ≈ 63°` (ähnlich zu Dimetrie) → Objekte sehen **natürlicher** aus als bei Kavalier
+</details>
+
+<details><summary>Perspektive</summary>
+
+<img src="./images/persvsparal.jpg" width="300" />
+
+> Perspektivische Projektion ist **keine affine Abbildung** mehr (Parallelen treffen sich im Fluchtpunkt)
+
+</details>
+
+## 5 VL
+
+<details><summary>Eigenschaften projektiver Abbildungen</summary>
+
+- Projektive Abbildungen in `P(ℝ⁴)` sind lineare Abbildungen (Matrizen) in `ℝ⁴`
+- **Geraden werden auf Geraden abgebildet**
+- Reihenfolge und **Doppelverhältnis** von Punkten auf einer Geraden bleiben erhalten
+- Perspektivische Abbildungen = spezielle projektive Abbildungen, aber **nicht affin**
+
+</details>
+
+<details><summary>Perspektivische Abbildung: Herleitung (2D)</summary>
+
+<img src="./images/persp-setup.jpeg" width="550" />
+
+`(x,y) ↦ (0, x0/(x+x0)·y)` — nicht affin (Division durch `x+x0`)
+
+homogene Matrix (Scherung + Standardprojektion):
+
+$$
+\begin{bmatrix}x\\y\\1\end{bmatrix} \mapsto \begin{bmatrix}0&0&0\\0&1&0\\\frac{1}{x_0}&0&1\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix}
+$$
+
+</details>
+
+<details><summary>Fluchtpunkte</summary>
+
+- Augpunkt `(-x0,0)` → `(-∞,0)`
+- `(+∞,0)` → Fluchtpunkt `(x0,0)`
+- Fächer aus Linien ↔ parallele Linien (jeweils Umkehrung voneinander)
+
+<img src="./images/fluchtpunkt.jpeg" width="550" />
+
+</details>
+
+<details><summary>Sichtfrustum & Grenzfall</summary>
+
+<img src="./images/sichtfrustum.jpeg" width="500" />
+
+- für `x0 → ∞` wird die perspektivische Projektion zur **orthogonalen** Projektion
+
+</details>
+
+##### [Clipping | Rasterisierung | Anti-Aliasing](./vorlesungen/CG1-4.pdf)
+
+<details><summary>Liang-Barsky-Algorithmus</summary>
+
+<img src="./images/liang.jpg" width="500" />
+
+</details>
+
+<details><summary>Cohen-Sutherland-Algorithmus</summary>
+
+<img src="./images/cohen-sutherland.png" width="400" />
+
+- Gut für Extremfälle, wenn die Enscheidung trivial ist
+- пример на S.11 - 25
+
+</details>
+
+<details><summary>Sutherland-Hodgman-Algorithmus</summary>
+
+<img src="./images/sutherland-hodgman.png" width="400" />
+
+- пример на S.41 - 49
+
+</details>
+
+## 6 VL
+
+<details><summary>Bresenham-Algorithmus</summary>
+
+<img src="./images/bresenham.png" width="300" />  
+<img src="./images/bresenham2.png" width="300" />
+
+- пример на S.41 - 49
+
+</details>
+
+<details><summary>Gupta-Sproull-Algorithmus = Erweiterung von Bresenham</summary>
+
+<img src="./images/gupta.png" width="300" />
+
+Gupta-Sproull ist eine Erweiterung von Bresenham, die **Anti-Aliasing ermöglicht**. Anstatt nur den Pixel zu zeichnen, der am nächsten an der idealen Linie liegt, zeichnet Gupta-Sproull auch die **benachbarten Pixel** darüber und darunter, aber **mit reduzierter Helligkeit**, abhängig von ihrem Abstand zur idealen Linie.
+
+$$D = \frac{d \pm \Delta x}{2\sqrt{\Delta x^2 + \Delta y^2}}$$
+
+</details>
+
+<details><summary>Füllenpolygon -> Scanline Algorithmus</summary>
+
+<img src="./images/scanline.png" width="300" />
+
+**Idee**: Polygon zeilenweise (Scanline für Scanline) durchlaufen, pro Zeile wird bestimmt, welche Pixel innerhalb liegen
+
+**Ablauf pro Scanline:**
+1. Finde alle Schnittpunkte der Scanline mit den Kanten des Polygons
+2. Sortiere Schnittpunkte nach `x`
+3. Fülle Pixel paarweise zwischen den Schnittpunkten (1.-2., 3.-4., ...)
+
+**Paritätsregel** (so wird "innen" erkannt, ohne pro Pixel zu testen):
+- Parität startet bei `0`
+- an jedem Schnittpunkt wird Parität um 1 erhöht
+- gefüllt wird, wenn Parität **ungerade** ist
+
+</details>
+
+<details><summary>Füllenpolygon -> Pineda Algorithmus</summary>
+
+<img src="./images/pineda.png" width="200" />
+
+**Grundidee**: Rasterisierung eines konvexen Polygons = Clipping der Pixel an allen Kanten gleichzeitig. Dreiecke sind immer konvex → ideal für Dreiecksrasterisierung (GPU-Standardverfahren)
+
+</details>
+
+## 7 VL
+
+<details><summary>Supersampling vs. Multisampling</summary>
+
+Supersampling und Multisampling sind zwei Anti-Aliasing-Techniken **gegen Treppeneffekte** in 3D-Grafiken. Beide Methoden basieren auf der **Idee, mehrere Samples pro Pixel zu verwenden**, um eine glattere Darstellung zu erreichen, **unterscheiden** sich jedoch in der Art und Weise, **wie diese Samples generiert und verarbeitet werden**.
+
+**SSAA**:
+- Rendert **das gesamte Bild intern** in höherer Auflösung
+- **Qualität: sehr gut**
+- **Performance: sehr teuer**
+
+**MSAA (erweiterte Supersampling)**:
+- Verarbeitet **nur die Kanten**
+- **Qualität: gut** für Geometrie, Textur-Aliasing bleibt unberührt
+- **Performance: effizienter** als SSAA, da weniger Samples berechnet werden müssen
+- Heufiger verwerdet
+
+</details>
+
+##### [Sichtbarkeitsalgorithmen | Culling](./vorlesungen/CG1-5.pdf)
+
+<details><summary>Painter’s Algorithmus</summary>
+
+<img src="./images/painter.png" width="200" />
+
+- Idee: Zeichne Bild wie ein Maler **von hinten nach vorne**
+- Probleme:
+  1. Sortieren hat **O(n*logn)** Laufzeit
+  - Lösung: BSP-Bäume  
+  <img src="./images/bsp.png" width="400" />
+  2. **Zyklische Überlappungen**
+  - Lösung: Clipping (Polygon in mehrere Teile aufteilen)  
+  <img src="./images/clipping.jpg" width="200" />
+
+1. und 2. können kombiniert werden, um die Probleme zu lösen:
+<img src="./images/bspundclipping.png" width="400" />
+</details>
+
+<details><summary>Z-Buffer-Algorithmus - Punktorientierte Algorithmen</summary>
+
+<img src="./images/zbuffer.png" width="200" />
+
+- Idee: Für jeden Pixel wird **die Tiefe (z-Wert)** gespeichert, um zu entscheiden, welcher Pixel sichtbar ist + **Farbe**.
+- Vorteile: 
+	- Einfach zu implementieren
+	- Keine Sortierung der Polygone nötig
+	- Funktioniert auch bei **Zyklischen Überlappungen**
+- Nachteile:
+	- Test für jeden Pixel nötig
+	- keine Transparenz
+	- Genauigkeit ist begrenzt
+
+**Ablauf:**
+1. **Initialisierung**:
+   - Bildspeicher wird mit der Hintergrundfarbe befüllt.
+   - Z-Speicher wird mit dem maximalen Z-Wert (`∞`) initialisiert.
+
+2. **Rastern aller Primitive** in beliebiger Reihenfolge (keine Sortierung notwendig).
+
+3. **Für jeden Punkt (x, y) eines Primitivs**:
+   - Berechne den Z-Wert `z(x, y)` durch **lineare Interpolation** auf dem perspektivisch transformierten Dreieck.
+   - Vergleich: Ist `z(x, y) < z_buf(x, y)`? (Ist der aktuelle Punkt näher als der bisher gespeicherte?)
+     - **Ja**:  `z_buf(x, y) := z(x, y)` und `pixel(x, y):= farbe`.
+     - **Nein**: Pixel ist verdeckt = keine Änderung.
+</details>
+
+## 8 VL
+
+<details><summary>Modifikation: Hierarchischer Z-Buffer (HZB) / Z-Pyramide</summary>
+
+Statt jeden Pixel einzeln zu testen, wird aus dem Z-Buffer eine Pyramide gebaut:
+- Höchste Ebene = normaler Z-Buffer
+- Jede höhere Ebene fasst 4 Pixel zusammen → speichert den **maximalen Z-Wert**
+- Test: Wenn z_min des neuen Objekts > z_Block → Objekt ist komplett verdeckt → gesamter Block wird verworfen
+
+Vorteil: nur die **sichtbaren Teile** der Szene werden gerendert, was die Leistung verbessert.
+
+<img src="./images/hz.jpg" width="400" />
+
+<img src="./images/hz2.jpg" width="500" />
+
+</details>
+
+<details><summary>Culling</summary>
+
+Culling-Algorithmen werden verwendet, um **nicht sichtbare Objekte** aus der Rendering-Pipeline zu entfernen, bevor sie auf dem Bildschirm gezeichnet werden. Dies spart Rechenleistung und verbessert die Performance.
+
+<img src="./images/culling.png" width="400" />
+
+- **View-Frustum Culling** – verwirft Objekte außerhalb des Sichtfrustums; früh auf der CPU; einfachster Typ
+- **Back-face Culling** – verwirft Rückseiten von Polygonen; GPU, nach Vertex-Transformation; mittlerer Aufwand
+- **Occlusion Culling** – verwirft Objekte hinter anderen Objekten; spät (z.B. HZB); aufwendigster Typ
+</details>
+
+<details><summary>Back-face Culling: Skalarprodukt-analyse</summary>
+
+<img src="./images/vector.png" width="200" />
+
+- S = Sehstrahl, N = Normalenvektor der Fläche
+- S·N < 0 → Fläche **sichtbar**
+- S·N ≥ 0 → Rückseite → **verwerfen**
+
+Im Bild: Fläche A ist sichtbar (S·N < 0), Fläche B ist eine Rückseite (S·N ≥ 0) → wird verworfen.
+
+</details>
+
+<details><summary>Methoden für View-Frustum</summary>
+
+<img src="./images/viewfrustum.png" width="400" />
+
+1. **Kugel** – einfachster Test, ungenau
+2. **AABB** (achsenparallele Bounding Box) – kein Rotationsaufwand, einfach
+3. **OBB** (orientierte Bounding Box) – genauester Fit, aufwendigster Test
+
+**Beste Methode für GPU: AABB** – einfach zu berechnen, gut parallelisierbar.
+
+Außerdem: Raumunterteilung mit Grids, Octrees oder Bäumen:
+
+<img src="./images/gitter.jpg" width="400" />
+
+<img src="./images/octree.jpg" width="400" />
+
+<img src="./images/baum.jpg" width="400" />
+
+</details>
+
+<details><summary>View-Frustum: Hüllkörperhierarchien (Bounding-Volume-Hierarchien
+/ BVH)</summary>
+
+<img src="./images/hull.jpg" width="400" />
+
+- Baum aus Hüllkörpern (z.B. AABB/Kugel), die Gruppen von Objekten umschließen
+- Zweck: bei Schnitttests (z.B. View-Frustum Culling) ganze Objektgruppen auf einmal verwerfen, statt jedes Objekt einzeln zu testen
+- gute Hierarchie = logarithmische Tiefe (balancierter Baum) + minimale Gesamtoberfläche der Hüllkörper
+- optimale Hierarchie ist O(eⁿ) → zu teuer, daher **Greedy-Algorithmus** (baut gute kD-Baum-Hierarchie in O(n log n))
+
+</details>
+
+## 9 VL
+
+<details><summary>Occlusion Culling: Zellen und Portale</summary>
+
+<img src="./images/zellen.jpg" width="400" />
+
+Weitere Optimierung: bestimmte Zellen von bestimmte Zelle werden niemals sichtbar (z. von H nach F) → **Speichere zu jeder Zelle alle Zellen, die möglicherweise eingesehen werden können**.
+
+</details>
+
+<details><summary>Hierarchisches Occlusion Culling</summary>
+
+- **Hierarchisches Occlusion Culling** = Kombination von **Occlusion Culling** und **Hierarchie** (z.B. HZB oder BVH)
+- Idee: Teste zuerst große Blöcke (von vorne nach hinten), wenn ein Block **vollständig verdeckt** ist, werden alle Kinder dieses Blocks verworfen → spart viele Tests
+
+</details>
+
+<details><summary>Hardware-Occlusion-Culling</summary>
+
+**1. Occlusion Culling Flag** — nur Ja/Nein-Flag, vendor-spezifisch, kein Feedback
+
+**2. HP Occlusion-Test** — testet Bounding Box gegen Tiefenpuffer, binäres Ergebnis, aber **synchron** → CPU wartet auf GPU (Pipeline Stall)
+
+**3. ARB Occlusion-Query** — standardisiert, **asynchron**, liefert genaue Pixelanzahl statt nur Flag
+
+</details>
+
+<details><summary>Aggressives approximatives Culling</summary>
+
+- Idee: Culling muss nicht 100% korrekt sein — kleine Fehler im Bild sind oft unsichtbar, dafür deutlich schneller
+- **Pessimistischer Ansatz** (konservativ): Objekt zeichnen, sobald **irgendein** Pixel des Hüllkörpers sichtbar ist (Query ≠ 0) → Nachteil: Hüllkörper ist größer als Objekt, oft sichtbar ohne dass Objekt selbst sichtbar ist → unnötige Draws
+- **Aggressiver Ansatz**: Objekt nur zeichnen, wenn **mindestens n** Pixel des Hüllkörpers sichtbar sind (Query ≥ n) → ignoriert kaum sichtbare Objekte, aber kann kleine Löcher im Bild erzeugen
+
+</details>
+
+## 9 VL
+
+##### [Beleuchtungsmodelle und Texturen](./vorlesungen/CG1-6.pdf)
+
+<details><summary>Beleuchtungsmodell und Typen</summary>
+
+Beleuchtungsmodell = Berechnung der Farbe und Helligkeit eines Pixels; beeinflusst durch Lichtquellen (Position, Intensität, Farbe) und Objektoberfläche (Geometrie, Reflexionseigenschaften).
+
+<img src="./images/typen.png" width="400" />
+
+</details>
+
+<details><summary>Superpositionprinzip</summary>
+
+- Betrachtet man Licht als Teilchen, addieren sich die Beiträge **mehrerer Lichtquellen** einfach auf:
+
+$$L(\lambda) = \sum_j L_j(\lambda)$$
+
+- `L_j(λ)` hängt jeweils von der Bestrahlungsstärke `E_j(λ)` und der Reflektanz ab
+
+</details>
+
+<details><summary>Ideal Diffuse Reflexion vs. Ideal Spiegelnde Reflexion vs. BRDF (Bidirectional Reflective Distribution Function)</summary>
+
+<img src="./images/reflexion-direkt-diffus.png" width="600" />
+
+**Ideal Diffuse Reflexion** — mattes Material:
+- Licht trifft auf die Oberfläche und wird **in alle Richtungen gleichmäßig** gestreut
+- die Oberfläche erscheint gleich hell
+- die Helligkeit hängt nur davon ab, **wie schräg** das Licht einfällt (Lambertsches Cosinusgesetz: je flacher, desto dunkler)
+
+**Ideal Spiegelnde Reflexion** — perfekter Spiegel:
+- Licht wird in **genau eine** Richtung reflektiert
+- Einfallswinkel = Ausfallswinkel (`θ_r = θ_i`)
+- Einfallsstrahl, Ausfallsstrahl und Flächennormale liegen in **einer Ebene**
+
+**BRDF (Bidirectional Reflective Distribution Function):**
+- Mathematisches Modell, das beschreibt **wie viel Licht** aus Richtung `ω_i` in Richtung `ω_r` reflektiert wird
+- Eingabe = Einfallsrichtung + Ausfallsrichtung → Ausgabe = Reflexionsstärke
+- Eigenschaften:
+  - **Reziprozität** — Einfalls- und Ausfallsrichtung sind symmetrisch
+  - **Energieerhaltung** — reflektiertes Licht kann nicht mehr sein als einfallendes
+  - **Anisotropie** — manche Materialien reflektieren unterschiedlich je nach Drehung der Oberfläche
+
+</details>
+
+<details><summary>Vereinfachende Annahmen der BRDF</summary>
+
+Die BRDF beschreibt nicht alle physikalischen Effekte. Sie nimmt an:
+
+1. **Gleiche Wellenlänge**: Reflektiertes Licht hat dieselbe Farbe wie einfallendes Licht → keine **Fluoreszenz** (Material wandelt Licht nicht in eine andere Farbe/Wellenlänge um)
+2. **Sofortige Reflexion** — das Licht verlässt die Oberfläche unmittelbar:
+   - kein **Phosphoreszenz** — Oberfläche speichert keine Energie und leuchtet nicht nach
+   - kein **Subsurface Scattering** — Licht dringt nicht ins Material ein
+
+</details>
+
+<details><summary>Aus welchen zwei Teilen besteht ein Beleuchtungsverfahren?</summary>
+
+1. **Beleuchtungsmodell**: beschreibt den Zusammenhang zwischen Lichtquellen und
+   Oberflächen und berechnet daraus die **Leuchtdichte in einem einzelnen Punkt**.
+2. **Beleuchtungsalgorithmus** (Shading Algorithm): berechnet ausgehend von der
+   Leuchtdichte in einigen wenigen Punkten die **Farbe aller Bildpunkte** (Pixel)
+   des Bildes.
+
+Die Kombination von Beleuchtungsmodell und Beleuchtungsalgorithmus heißt
+Beleuchtungsverfahren.
+
+</details>
+
+<details><summary>Flat / Gouraud / Phong Shading</summary>
+
+<img src="./images/flat-shading-_shading.fit_lim.size_1050x.gif" width="400"/>
+
+**Flat Shading**
+- ein Farbwert pro Polygon (Beleuchtung mit Flächennormale, einmalig berechnet)
+- \+ sehr schnell
+- \- Kanten bleiben sichtbar, Objekt wirkt grob/facettiert
+
+**Gouraud Shading**
+- Beleuchtung nur an den Eckpunkten, Farbwerte werden interpoliert
+- \+ günstiger als Phong (Beleuchtung nur pro Vertex statt pro Pixel)
+- \- Glanzlichter (spekular) gehen zwischen den Eckpunkten verloren
+
+**Phong Shading**
+- Normale wird interpoliert und renormiert, Beleuchtung pro Pixel neu berechnet
+- \+ glatte, korrekte Glanzlichter (auch spekular)
+- \- rechenintensiver (Beleuchtung pro Pixel statt pro Vertex)
+
+</details>
+
+<details><summary>Lichtquellen (basierend auf dem Superpositionsprinzip) des Phong-Modells und Problem, das Blinn-Phong löst</summary>
+
+**Superpositionsprinzip:** Licht wird wie Teilchen behandelt, Beiträge mehrerer
+Lichtquellen addieren sich einfach.
+
+**Lichtquellen im Phong-Modell:** verwendet werden **Punktlichtquellen**. Für jede der *n* Punktlichtquellen wird ein eigener diffuser +
+spekularer Beitrag berechnet und (zusammen mit einem einmaligen ambienten
+Anteil) aufsummiert:
+
+<img src="./images/superpositionsprinzip.png" width="600"/>
+
+**Problem im Phong-Modell:** Für das Glanzlicht muss zuerst der
+Reflexionsvektor `R` berechnet werden (die Richtung, in die der Lichtstrahl von der Fläche abprallt: `R = 2(N·L)N - L`).  
+1. teuer: pro Pixel eine zusätzliche Normalisierung nötig
+2. bei streifendem Lichteinfall kann der Winkel zwischen `V` und `R` > 90° werden → Glanzlicht bricht unnatürlich abrupt ab
+
+**Lösung von Blinn-Phong:** statt `R` nehmen Halfway-Vektor `H = (L+E)/‖L+E‖` (Mitte aus Licht- und
+Blickrichtung). Das Löst beide Probleme.
+
+**Beispiel (Sonne im See):**
+- Phong-Modell → rundes, isoliertes Glanzlicht (unrealistisch)
+- Blinn-Phong-Modell → länglicher, zum Horizont gestreckter Streifen (entspricht der Realität)
+
+<img src="./images/beispiel.png" width="400"/>
+
+</details>
+
+## 10 VL
+
+<details><summary>Probleme des Phong/Blinn-Phong-Modells, die das LaFortune-Modell löst</summary>
+
+Die BRDF von Phong/Blinn-Phong hat zwei Probleme:
+
+<img src="./images/probleme.png" width="400"/>
+
+**1. keine Energieerhaltung:** Division durch `N·L` → kann zu `-∞` führen.
+
+**2. keine Reziprozität (keine Symmetrie):** vertauscht man `L` und `E`, müsste dasselbe
+rauskommen, tut es aber nicht.
+
+**Wie das LaFortune-Modell das löst:**
+
+**1. Energieerhaltung:** keine Division durch `N·L` mehr → bleibt
+  beschränkt.
+
+<img src="./images/energieerhaltung.png" width="400"/>
+
+**2. Reziprozität:** statt einer festen Formel nimmt man eine beliebige
+  **symmetrische Matrix M**.
+
+<img src="./images/rezip.png" width="400"/>
+
+</details>
+
+<details><summary>Transparency: Depth-Peeling (OIT)</summary>
+
+Bei durchsichtigen Objekten muss man die Farben in der richtigen Reihenfolge
+(von hinten nach vorne) blenden. Problem: Wenn sich Dreiecke gegenseitig durchdringen, gibt es
+**keine einzige richtige Reihenfolge** für die Objekte als Ganzes.
+
+Depth-Peeling sortiert deshalb nicht die Objekte, sondern **jeden Pixel
+einzeln**:
+- Jeder Render-Durchlauf findet die nächste Tiefenschicht
+- Für *n* Schichten braucht man *n* Durchläufe
+- Am Ende werden alle gefundenen Schichten von hinten nach vorne zusammengemischt
+
+\+ Ergebnis ist immer korrekt, egal wie sich die Objekte überschneiden — Sortierung nicht nötig  
+\- Sehr aufwendig: die ganze Szene wird mehrfach gezeichnet, dazu braucht man viele Zusatzspeicher (Buffer)
+
+</details>
+
+<details><summary>Transparency: Nebel</summary>
+
+Vorteile:
+- Realistischher Look
+- spart Rechenleistung, da Objekte in der Ferne nicht mehr so detailliert gerendert werden müssen
+
+Nachteile (z-Achse):
+- **z nicht linear**: z-Wert nach perspektivischer Transformation ist nicht linear → muss für Nebelberechnung zurückgerechnet werden
+- **z ≠ Entfernung**: z ist nur die Tiefe entlang der Blickachse, nicht die echte Distanz zum Auge → ggf. Umrechnung nötig ("Euclidean Distance Fog")
+- **pro Vertex ungenau**: wie beim Gouraud Shading führt Nebel nur pro Vertex bei großen/schrägen Dreiecken zu Fehlern → besser "per pixel fog"
+
+</details>
+
+## 11 VL
+
+<details><summary>Texturen: Inverse-Mapping-Problem</summary>
+
+**Textur** = Bild, das auf ein 3D-Objekt "geklebt" wird. Einfach zu
+denken ist die Richtung: *"dieser Punkt `(u,v)` auf dem Bild landet dort
+`(x,y,z)` auf dem Objekt"* (`F_map`).
+
+$$(r,g,b) = C_{tex}(u,v)$$
+
+Eine 2D-Textur ist also eine Funktion, die Punkte `(u,v)` auf RGB-Farbwerte abbildet.
+
+Beim Zeichnen kennt man aber schon den Punkt `(x,y,z)` auf der Oberfläche
+und muss herausfinden, **welcher Bildpunkt `(u,v)` dort hingehört**, man
+braucht also die Umkehrfunktion `F_invmap`. Für komplizierte Objektformen
+lässt sich diese Umkehrung oft nicht einfach mit einer Formel berechnen,
+das ist das **Inverse-Mapping-Problem**.
+
+$$(u,v) = F_{invmap}(x,y,z)$$
+
+Die Texturierung ist die Hintereinanderausführung beider Abbildungen:
+
+$$(r,g,b) = C_{tex}\left(F_{invmap}(x,y,z)\right)$$
+
+**Lösung:**
+- einfache Grundkörper (Zylinder-, Kugel-, Box-Mapping) → analytisch bekannt
+- komplexe Objekte → **Zweischrittverfahren** (Bier & Sloan): Objekt mit einfacher Hüllfläche umgeben → Texturkoordinaten davon auf Objekt übertragen
+
+</details>
+
+<details><summary>Texturen: 3D- / Prozedurale / Diskrete Texturen</summary>
+
+- **3D-Textur**: Man stellt sich das Material als festen Block vor (z. B.
+  Marmor) und "schneidet" das Objekt daraus heraus. Kein
+  Aufkleben auf die Oberfläche nötig.  
+	*+:* beliebig skalierbar, realistisch  
+	*-:* braucht viel Speicher
+- **Prozedurale Textur**: Es gibt gar kein gespeichertes Bild, sondern eine
+  Formel, der die Farbe für jeden Punkt live berechnet.  
+	*+:* wenig Speicher, beliebig skalierbar  
+  *-:* eine gute Formel für komplizierte, realistische Muster zu
+  finden ist sehr schwer.
+- **Diskrete Textur**: ein ganz normales gespeichertes Bild (z. B. ein Foto),
+  aus einzelnen Bildpunkten (Texeln).  
+	*+:* einfach zu erstellen  
+	*-:* braucht viel Speicher, unskalierbar
+
+</details>
+
+<details><summary>Texturen: Mipmapping</summary>
+
+**Mipmapping** = Optimierungsmethode der 3D-Grafik, bei der die
+Originaltextur im Voraus verkleinert und als eine Reihe von Kopien
+(Mip-Stufen) unterschiedlicher Auflösung gespeichert wird.
+
+**Wie es funktioniert**
+- Beim Erstellen einer Textur erzeugt die
+  Grafikkarte verkleinerte Kopien davon, wobei die Auflösung für jede
+  weitere Stufe halbiert wird
+- Je weiter ein Objekt in der Szene entfernt ist, desto kleiner ist die
+  Mip-Stufe
+
+**Vorteile von Mipmapping**
+- Verbessert die Leistung der Grafikkarte (die GPU muss keine schweren Texturen für kleine Objekte laden)
+- Glättet die Pixelierung und beseitigt starkes Rauschen auf Texturen, wenn sich das Objekt weit entfernt befindet
+
+**Nachteile von Mipmapping**
+- viel Speicher für zusätzliche Stufen
+- gegen sichtbare Übergänge zwischen Mip-Stufen: **trilineare** oder **anisotrope Filterung**
+
+</details>
+
+<details><summary>Beeinflussung der Beleuchtung durch Texturen (8 Methoden)</summary>
+
+Eine Textur kann an ganz unterschiedlichen Stellen in die Beleuchtungsrechnung eingreifen:
+
+1. **Ersetzen** (`replace`) — Texturfarbe ersetzt komplett die Beleuchtung (einfachste Art): `L = C_tex(u,v)`  
+<img src="./images/replace.png" width="400"/>
+
+2. **A posteriori Skalierung** (`modulate`) — Beleuchtung wird mit Texturfarbe multipliziert (häufigste Art): `L = L_r · C_tex(u,v)`  
+<img src="./images/posteriori.png" width="400"/>
+
+3. **A priori Skalierung der Materialfarbe** — ähnlich zu 2., aber spekularer Anteil bleibt unbeeinflusst  
+<img src="./images/prori.png" width="300"/>
+
+4. **Modulation der spekularen Reflexion** — analog zu 3., aber erlaubt Gestaltung unregelmäßiger Highlight (verschmutzte Flächen)  
+<img src="./images/modulation3.png" width="150"/>
+
+5. **Modulation der Transparenz** — ermöglicht Durchsichtigkeit (z.B. Glas, Wasser, Nebel)  
+<img src="./images/modulation5.png" width="150"/>
+
+6. **Bump-Mapping** — Textur speichert Höhenwerte, deren Ableitungen die Flächennormale verändern → Ermöglicht komplexe Oberflächen mit einfacher Geometrie  
+<img src="./images/modulation6.png" width="150"/>
+
+7. **Modulation von Lichtquellenparametern** — Textur moduliert Lichtfarbe/-intensität  
+<img src="./images/modulation7.png" width="300"/>
+
+8. **Displacement-Mapping** — Veränderung der Geometrie  
+<img src="./images/modulation8.png" width="400"/>
+
+**Einschränkung:** Bei **Gouraud Shading** sind nur 1. und 2. möglich (Beleuchtung wird nur pro Vertex berechnet). 3.–7. brauchen **Phong Shading** (pro Pixel). 8. lässt sich nicht direkt in die Rasterisierung integrieren, da die Texturierung erst nach der Projektion erfolgt (braucht Tessellation vorher).
+
+</details>
+
+<details><summary>Texturierung komplexer Objektoberflächen (Zweischrittverfahren)</summary>
+
+- Für komplexe Objekte ist es zu aufwendig, Texturkoordinaten für jeden Vertex von Hand zuzuweisen
+- **Zweischrittverfahren** (Bier & Sloan, 1986):
+  1. Objekt mit einfacher **virtueller Hüllfläche** umgeben (Zylinder, Kugel oder Quader) mit kanonischen Texturkoordinaten
+  2. Diese Texturkoordinaten auf das umhüllte Objekt übertragen (z.B. entlang der Flächennormale projizieren)
+
+- **Zylinder** (`φ,h`) / **Kugel** (`θ,φ`) / **Box** (längste/zweitlängste Achse) → `(u,v)`
+
+</details>
+
+<details><summary>Geometrische Schatten: Schattenvolumen</summary>
+
+- **Schattenvolumen**: Bereich hinter einem Objekt (aus Sicht der Lichtquelle), begrenzt durch dessen Silhouette — liegt ein Punkt darin, liegt er im Schatten
+- **Stencil-Buffer-Algorithmus**: Schattenpolygone zeichnen (nicht sichtbar) und dabei nur zählen — Rückseiten +1, Vorderseiten −1 → Zähler > 0 heißt "im Schatten". Danach Szene normal zeichnen, aber nur dort wo Zähler = 0
+- **zPass/zFail**: zwei Varianten, wo gezählt wird (vor/hinter dem sichtbaren Punkt)
+
+</details>
+
+<details><summary>Geometrische Schatten: Shadow Mapping</summary>
+
+- Idee: Tiefenbild aus Sicht der Lichtquelle rendern (Shadow Map). Punkt liegt im Schatten, wenn seine Tiefe (aus Lichtsicht) größer ist als der gespeicherte Wert
+- Problem: **Aliasing** — nahe am Betrachter zu grob, in der Ferne zu fein (perspektivisch); bei flachem Lichteinfall generell ungenau (projektiv)
+- **Perspective Shadow Maps** lösen nur das perspektivische Aliasing, nicht das projektive
 
 </details>
