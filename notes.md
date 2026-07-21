@@ -148,56 +148,66 @@ Eigenschaften von affinen Abbildungen:
 
 <details><summary>2D und 3D Transformationen</summary>
 
-- **Translation in 2D**: Verschiebung eines Objekts um einen Vektor `t = (tx, ty)`
-- **Translation in 3D**: ... `t = (tx, ty, tz)`
+<img src="./images/Ch4_L3_Transformations.png" width="500" />
 
-```T(tx, ty, tz) = [[1, 0, tx],
+###### **Translation**
+- **2D**: Verschiebung eines Objekts um einen Vektor `t = (tx, ty)`
+- **3D**: ... `t = (tx, ty, tz)`
+
+```
+		T(tx, ty, tz) = [[1, 0, tx],
 						 [0, 1, ty],
 						 [0, 0, 1]]
 ```
 
-- **Rotation in 2D**: Drehung eines Objekts um einen Winkel `θ` (gegen den Uhrzeigersinn)
-
-```R(θ) = [[cos(θ), -sin(θ)],
+###### **Rotation**
+- **2D**: Drehung eines Objekts um einen Winkel `θ` (gegen den Uhrzeigersinn)
+```
+		R(θ) = [[cos(θ), -sin(θ)],
 				 [sin(θ),  cos(θ)]]
 ```
 
-- **Rotation in 3D**: ... um eine Achse (x, y oder z) um einen Winkel `θ`
+- **3D**: ... um eine Achse (x, y oder z) um einen Winkel `θ`
 
-```Rz(θ) = [[cos(θ), -sin(θ), 0],
+```
+		Rz(θ) = [[cos(θ), -sin(θ), 0],
 				 [sin(θ),  cos(θ), 0],
 				 [0,       0,      1]]
 ```
-
-    Problem:
-
+*Problem*:
 1. zu klein oder zu großer Winkel kann zu numerischen Instabilitäten führen
 2. Gimbal Lock (Verlust einer Rotationsfreiheit)
 
-- **Skalierung in 2D**: Vergrößerung oder Verkleinerung eines Objekts um Faktoren `sx` und `sy`
+###### **Skalierung**
+- **2D**: Vergrößerung oder Verkleinerung eines Objekts um Faktoren `sx` und `sy`
 
-```S(sx, sy) = [[sx, 0],
+```
+			S(sx, sy) = [[sx, 0],
 						 [0, sy]]
 ```
 
-- **Skalierung in 3D**: ... und `sz`
+- **3D**: ... und `sz`
 
-```S(sx, sy, sz) = [[sx, 0, 0],
+```
+				S(sx, sy, sz) = [[sx, 0, 0],
 								 [0, sy, 0],
 								 [0, 0, sz]]
 ```
 
-- **Shearing in 2D**: Verzerrung eines Objekts, z.B. horizontaler Shear mit Faktor `shx`
+###### **Shearing**
+- **2D**: Verzerrung eines Objekts, z.B. horizontaler Shear mit Faktor `shx`
 
-```Sh(shx) = [[1, shx],
-						[0, 1]]
+```
+					  Sh(shx) = [[1, shx],
+								 [0, 1]]
 ```
 
-- **Shearing in 3D**:
+- **3D**:
 
-```Sh(shx) = [[1, s3, s5],
-						[s1, 1, s6],
-						[s2, s4, 1]]
+```
+					  Sh(shx) = [[1, s3, s5],
+								 [s1, 1, s6],
+								 [s2, s4, 1]]
 ```
 
 </details>
@@ -536,7 +546,7 @@ $$
 <img src="./images/bresenham.png" width="300" />  
 <img src="./images/bresenham2.png" width="300" />
 
-- пример на S.41 - 49
+- пример на S.104 - 115
 
 </details>
 
